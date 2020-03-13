@@ -9,8 +9,15 @@ namespace AsyncConsoleChallenge
         static void Main(string[] args)
         {
             Console.WriteLine($"{DateTime.Now.Second} We gaan een ontbijtje maken!");
-            MaakOntbijtAsync().Wait();
+            OchtendRoutineAsync().Wait();
             Console.WriteLine($"{DateTime.Now.Second} Ontbijt is klaar!");
+        }
+        static async Task OchtendRoutineAsync()
+        {
+            Task ontbijt = MaakOntbijtAsync();
+            Task krant = PakKrantAsync();
+            await ontbijt;
+            await krant;
         }
         static async Task MaakOntbijtAsync()
         {
@@ -52,5 +59,10 @@ namespace AsyncConsoleChallenge
             await Task.Delay(3000);
             return "Brood is klaar";
         }
+        static async Task PakKrantAsync()
+        {
+            await Task.Delay(1500);
+            Console.WriteLine("Krant gepakt");
+        }
     }
- }
+}
