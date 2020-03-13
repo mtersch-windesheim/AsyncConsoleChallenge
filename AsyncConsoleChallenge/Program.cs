@@ -16,7 +16,7 @@ namespace AsyncConsoleChallenge
         {
             // Synchroon koffiezetten -> bij aanroep direct (500msec) resultaat
             string koffieMelding = SchenkKoffieIn();
-            
+
             // Asynchroon eitjes koken en brood roosteren: hier beginnen we beide taken...
             Task<string> eitjesTaak = KookEitjesAsync();
             Console.WriteLine("Eitjes staan op het vuur");
@@ -37,11 +37,13 @@ namespace AsyncConsoleChallenge
             Console.WriteLine(broodMelding);
 
         }
-        static string SchenkKoffieIn() {
+        static string SchenkKoffieIn()
+        {
             Thread.Sleep(500);
             return "Koffie is klaar";
         }
-        static async Task<string> KookEitjesAsync() {
+        static async Task<string> KookEitjesAsync()
+        {
             await Task.Delay(3000);
             return "Eitjes zijn klaar";
         }
@@ -50,4 +52,5 @@ namespace AsyncConsoleChallenge
             await Task.Delay(3000);
             return "Brood is klaar";
         }
+    }
  }
