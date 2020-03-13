@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,11 +7,17 @@ namespace AsyncConsoleChallenge
 {
     class Program
     {
+        private static Stopwatch watch;
         static void Main(string[] args)
         {
-            Console.WriteLine($"{DateTime.Now.Second} We gaan een ontbijtje maken!");
+            watch = new Stopwatch();
+            watch.Start();
+
+            TimedWrite("We gaan ontbijten met een krantje!");
             OchtendRoutineAsync().Wait();
-            Console.WriteLine($"{DateTime.Now.Second} Ontbijt is klaar!");
+            TimedWrite("Zo... klaar voor de dag!");
+
+            watch.Stop();
         }
         static async Task OchtendRoutineAsync()
         {
@@ -21,14 +28,16 @@ namespace AsyncConsoleChallenge
         }
         static async Task MaakOntbijtAsync()
         {
+            TimedWrite("Begonnen ontbijt te maken");
             // Synchroon koffiezetten -> bij aanroep direct (500msec) resultaat
             string koffieMelding = SchenkKoffieIn();
+            TimedWrite(koffieMelding);
 
             // Asynchroon eitjes koken en brood roosteren: hier beginnen we beide taken...
             Task<string> eitjesTaak = KookEitjesAsync();
-            Console.WriteLine("Eitjes staan op het vuur");
+            TimedWrite("Eitjes staan op het vuur");
             Task<string> broodTaak = RoosterBroodAsync();
-            Console.WriteLine("Brood zit in het rooster");
+            TimedWrite("Brood zit in het rooster");
 
             // ... en hier wachten we op het resultaat.
             // NB: op dit punt aangekomen kunnen we tussendoor ook andere dingen doen!
@@ -39,30 +48,35 @@ namespace AsyncConsoleChallenge
             // string eitjesMelding = await KookEitjesAsync();
             // string broodMelding = await RoosterBroodAsync();
 
-            Console.WriteLine(koffieMelding);
-            Console.WriteLine(eitjesMelding);
-            Console.WriteLine(broodMelding);
+            TimedWrite(eitjesMelding);
+            TimedWrite(broodMelding);
 
+            TimedWrite("Ontbijt is klaar");
         }
         static string SchenkKoffieIn()
         {
             Thread.Sleep(500);
-            return "Koffie is klaar";
+            return "2 kopjes koffie";
         }
         static async Task<string> KookEitjesAsync()
         {
             await Task.Delay(3000);
-            return "Eitjes zijn klaar";
+            return "2 gekookte eitjes";
         }
         static async Task<string> RoosterBroodAsync()
         {
             await Task.Delay(3000);
-            return "Brood is klaar";
+            return "2 geroosterde broodjes";
         }
         static async Task PakKrantAsync()
         {
+            TimedWrite("Naar de brievenbus voor de krant...");
             await Task.Delay(1500);
-            Console.WriteLine("Krant gepakt");
+            TimedWrite("Krant gepakt");
+        }
+        static void TimedWrite(string message)
+        {
+            Console.WriteLine($"{watch.ElapsedMilliseconds.ToString()} - {message}");
         }
     }
 }
