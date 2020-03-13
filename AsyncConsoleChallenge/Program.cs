@@ -9,17 +9,33 @@ namespace AsyncConsoleChallenge
         static void Main(string[] args)
         {
             Console.WriteLine($"{DateTime.Now.Second} We gaan een ontbijtje maken!");
-            MaakOntbijt().Wait();
+            MaakOntbijtAsync().Wait();
             Console.WriteLine($"{DateTime.Now.Second} Ontbijt is klaar!");
         }
-        static async Task MaakOntbijt()
+        static async Task MaakOntbijtAsync()
         {
+            // Synchroon koffiezetten -> bij aanroep direct (500msec) resultaat
             string koffieMelding = SchenkKoffieIn();
+            
+            // Asynchroon eitjes koken en brood roosteren: hier beginnen we beide taken...
+            Task<string> eitjesTaak = KookEitjesAsync();
+            Console.WriteLine("Eitjes staan op het vuur");
+            Task<string> broodTaak = RoosterBroodAsync();
+            Console.WriteLine("Brood zit in het rooster");
+
+            // ... en hier wachten we op het resultaat.
+            // NB: op dit punt aangekomen kunnen we tussendoor ook andere dingen doen!
+            string eitjesMelding = await eitjesTaak;
+            string broodMelding = await broodTaak;
+
+            // NB: Kijk ook eens wat er gebeurt als je volgende code gebruikt:
+            // string eitjesMelding = await KookEitjesAsync();
+            // string broodMelding = await RoosterBroodAsync();
+
             Console.WriteLine(koffieMelding);
-            string eitjesMelding = KookEitjesAsync().Result;
             Console.WriteLine(eitjesMelding);
-            string broodMelding = RoosterBroodAsync().Result;
             Console.WriteLine(broodMelding);
+
         }
         static string SchenkKoffieIn() {
             Thread.Sleep(500);
@@ -34,5 +50,4 @@ namespace AsyncConsoleChallenge
             await Task.Delay(3000);
             return "Brood is klaar";
         }
-    }
-}
+ }
