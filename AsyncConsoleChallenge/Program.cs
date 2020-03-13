@@ -9,6 +9,13 @@ namespace AsyncConsoleChallenge
         static void Main(string[] args)
         {
             Console.WriteLine("We gaan een ontbijtje maken!");
+            string koffieMelding = SchenkKoffieIn();
+            Console.WriteLine(koffieMelding);
+            string eitjesMelding = KookEitjesAsync().Result;
+            Console.WriteLine(eitjesMelding);
+            string broodMelding = RoosterBroodAsync().Result;
+            Console.WriteLine(broodMelding);
+            Console.WriteLine("Ontbijt is klaar!");
         }
         static string SchenkKoffieIn() {
             Thread.Sleep(500);
